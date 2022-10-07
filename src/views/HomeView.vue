@@ -15,7 +15,7 @@
 
 
 import ListPosts from '../components/ListPosts.vue';
-import load from '../composable/api/GetData';
+import load from '../composable/api/getDataFirebase';
 
 
 import Spinner from '../components/spinner.vue';

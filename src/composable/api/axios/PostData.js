@@ -1,14 +1,18 @@
 import axios from "axios"
 import { ref } from 'vue'
-import {baseUrl} from './config';
+import {baseUrl} from '../config';
 const data = ref([]);
 const error = ref(null)
+// import {baseUrl} from './config';
 const getData = (uri) => {
-   
-    const apiCall = async () => {
+   console.log('get data in')
+    const apiCall = async (postedData) => {
+        console.log('api call data in')
         try {
-            let response = await axios.get(baseUrl+uri)
-            // console.log(response)
+            let response = await axios.post(baseUrl+uri,
+                postedData)
+            console.log(response,postedData)
+            
             if (response.statusText !== "OK") {
                 throw Error('err')
             }

@@ -3,7 +3,7 @@
         <RouterLink :to="{name:'postDetails',params:{idx:post.id}}">
             <h3> {{post.title}}</h3>
         </RouterLink>
-        <!-- <div> {{bodyPostr}}</div> -->
+        <div> {{bodyPostr}}</div>
         <div v-if="post.tags.length">
             <span v-for="tag in post.tags" :key="tag">
                 <RouterLink :to="{name:'tags', params:{tag:tag}}">

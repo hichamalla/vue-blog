@@ -1,5 +1,5 @@
 <template>
-    {{tag}}
+    <!-- {{tag}} -->
     <div class="home">
         <div v-if="error">{{error}}</div>
         <div v-if="posts.length">
@@ -18,62 +18,53 @@
 </template>
 
 <script>
-import { computed } from '@vue/reactivity';
+import { computed, ref } from '@vue/reactivity';
 import { useRoute } from 'vue-router';
-import loadData from '../composable/api/GetData';
+import getDatafs from '../composable/api/getDataFirebase';
 
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
 export default {
     name: 'tags',
     components: { ListPosts, Spinner },
-    // props: ['tag'],
+    props: ['tag'],
     setup() {
         const router = useRoute()
+        const err=ref('')
         let tag = router.params.tag
 
-        const { data: posts, error, apiCall } = loadData('posts')
+        const { data: posts, error, apiCall } = getDatafs('posts')
         apiCall()
         // console.log(posts)
+        console.log("posts.value",posts.value)
         const resumedData = computed(() => {
-            console.log(posts.value)
+            
             // let postdata =  
             let output = []
             output=posts.value.filter(eachVal => {
                 // console.log('eachVal',eachVal)
-                    let opt = eachVal.tags.filter(value=>value===tag).length>0
-                    let hik=eachVal.tags.filter(value=>value===tag)
-                    console.log('hik',opt)
-                    //     ({tag} ) => tag.some(({tag})==router.params.tag)
-                    //         // .some(({ grade }) => grade === 'A')
-                    //         );
+                    let opt = eachVal.tags.includes(tag)
+
                     return opt;
                 })
                 
-            //     postdata.filter(post => {
-            //     // console.log(post.tags)
-            //     // post.tags.include(router.params.tag)
-
-            //     let map = Object.keys(post.tags).map((key) => post.tags[key]);
-            //     // console.log('map',map,)
-            //     let data = map.includes(router.params.tag);
-            //     console.log('data', data)
-
-             
-            //     return 0;
-            //     // filter(tag=>{
-            //     //     console.log(tag,tag===router.params.tag);
-            //     //     return tag===router.params.tag
-            //     // }).length
-            // })
-            console.log("postdata", output)
-            return output || []
+        
+            console.log("output S", output)
+            return  output 
         })
-        if (!resumedData.length) {
-            error.value = 'no Data Found'
+        
+        resumedData.value
+        if (error.value!='') {
+            console.log("error.value",error.value)
+            err.value = error.value
+        }
+        else if (!resumedData.value.length) {
+            console.log('resumedData.length',resumedData.value.length)
+            err.value = 'no Data Found'
         }
         console.log('resumedData', resumedData,resumedData.length)
-        return { tag,posts, resumedData, error }
+        console.log('err',err.value)
+        return { posts, resumedData, error }
     }
 }
 </script>

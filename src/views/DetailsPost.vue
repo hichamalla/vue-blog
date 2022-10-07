@@ -9,13 +9,13 @@
 
 <script>
 
-    import loadData from '../composable/api/GetData';
+    import getDatafs from '../composable/api/getDataElementFirebase';
 export default {
     name: "DetailsPost",
     props: ['idx'], 
     setup(props) {
     
-        const {data:post,error,apiCall } = loadData('posts/'+props.idx)
+        const {data:post,error,apiCall } = getDatafs(props.idx)
         apiCall()
         console.log("home",{post,error})
         return { post,error };

@@ -21,7 +21,7 @@
 
 <script>
 import { ref } from 'vue';
-import sendData from '../composable/api/PostData';
+import sendData from '../composable/api/createElementFirebase';
 export default {
     name: "createPost",
     setup() {
@@ -40,7 +40,7 @@ export default {
             tag.value = ''
         }
         
-        const { data: posts, error, apiCall } = sendData('posts')
+        const { data: posts, error, apiCall } = sendData()
         const submit = () => {
             const post={
             title: title.value,
