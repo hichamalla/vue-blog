@@ -20,7 +20,7 @@
 <script>
 import { computed, ref } from '@vue/reactivity';
 import { useRoute } from 'vue-router';
-import getDatafs from '../composable/api/getDataFirebase';
+import getPosts from '../composable/getPosts';
 
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
@@ -33,9 +33,9 @@ export default {
         const err=ref('')
         let tag = router.params.tag
 
-        const { data: posts, error, apiCall } = getDatafs('posts')
-        apiCall()
-        // console.log(posts)
+        const {data:posts,error }=  getPosts()
+
+
         console.log("posts.value",posts.value)
         const resumedData = computed(() => {
             

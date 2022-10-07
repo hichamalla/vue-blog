@@ -14,10 +14,10 @@
 <script>
 
 
+
+import getPosts from '../composable/getPosts';
+
 import ListPosts from '../components/ListPosts.vue';
-import load from '../composable/api/getDataFirebase';
-
-
 import Spinner from '../components/spinner.vue';
 import tagList from '../components/tagList.vue';
 
@@ -26,9 +26,8 @@ export default {
     components: { ListPosts, Spinner,tagList },
     setup() {
         
-        const {data:posts,error,apiCall }=   load('posts')
-        apiCall()
-        // console.log("home",{posts,error})
+        const {data:posts,error }=  getPosts()
+
         return { posts,error };
     },
     mounted(){

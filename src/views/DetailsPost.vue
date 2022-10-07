@@ -9,13 +9,13 @@
 
 <script>
 
-    import getDatafs from '../composable/api/getDataElementFirebase';
+    import {fetchDoc} from '../composable/api/firebase/firebase';
 export default {
     name: "DetailsPost",
     props: ['idx'], 
     setup(props) {
     
-        const {data:post,error,apiCall } = getDatafs(props.idx)
+        const {data:post,error,apiCall } = fetchDoc('posts',props.idx)
         apiCall()
         console.log("home",{post,error})
         return { post,error };

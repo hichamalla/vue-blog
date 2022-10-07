@@ -21,7 +21,7 @@
 
 <script>
 import { ref } from 'vue';
-import sendData from '../composable/api/createElementFirebase';
+import {createNewDoc} from '../composable/api/firebase/firebase';
 export default {
     name: "createPost",
     setup() {
@@ -40,14 +40,15 @@ export default {
             tag.value = ''
         }
         
-        const { data: posts, error, apiCall } = sendData()
+       
         const submit = () => {
             const post={
             title: title.value,
             body: body.value,
             tags: tags.value,
-
+          
         }
+        const { data: posts, error, apiCall } = createNewDoc(post,'posts')
             // console.log(title.value,body.value,tags.value)
             console.log(post)
             apiCall(post)

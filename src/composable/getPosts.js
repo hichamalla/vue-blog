@@ -1,4 +1,5 @@
-import load from './api/GetData';
+import {fetchDocuments} from './api/firebase/firebase';
+
 
 const getPosts = () => {
     
@@ -6,10 +7,9 @@ const getPosts = () => {
 
     // const hi = async()=>await
     
-    const {data:posts,error,apiCall }=   load('posts')
-    // console.log('getposts',{posts,error })
+    const {data,error,apiCall }=   fetchDocuments('posts')
     apiCall()
 
-    return {posts,error}
+    return {data,error}
 }
 export default getPosts
