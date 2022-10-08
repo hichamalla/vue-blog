@@ -1,11 +1,11 @@
 <template>
     <div class="tag-cloud">
         <h3>Tags</h3>
-        <div v-for="tag in tags">
+        <!-- <div v-for="tag in tags">
             <RouterLink :to="{name:'tags', params:{tag:tag}}">
                 #{{tag}}
             </RouterLink>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -16,9 +16,9 @@ export default {
     name: 'tagList',
     setup(props) {
         // console.log('props.tags',props.posts)
-        const { tags } = useTags(props.posts)
+        // const { tags } = useTags(props.posts)
 
-        return { tags }
+        // return { tags }
     }
 }
 

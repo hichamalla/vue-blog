@@ -1,4 +1,7 @@
 <template>
+    <div v-if="err" style="background-color: red;"> 
+        {{err}}
+    </div>
     <div class="create">
         <form v-on:submit.prevent="submit">
 
@@ -21,7 +24,7 @@
 
 <script>
 import { ref } from 'vue';
-import {createNewDoc} from '../composable/api/firebase/firebase';
+import {createNewDocuments} from '../composable/postsHandler';
 export default {
     name: "createPost",
     setup() {
@@ -29,7 +32,7 @@ export default {
         const body = ref("")
         const tag = ref("")
         const tags = ref([])
-
+        const err=ref('')
         const addTag = () => {
             tag.value = tag.value.replace(/\s/g, '')
             if (!tags.value.includes(tag.value)) {
@@ -42,21 +45,23 @@ export default {
         
        
         const submit = () => {
-            const post={
+            const newPost={
             title: title.value,
             body: body.value,
             tags: tags.value,
           
         }
-        const { data: posts, error, apiCall } = createNewDoc(post,'posts')
+        const { id, error:err } = createNewDocuments(newPost)
             // console.log(title.value,body.value,tags.value)
-            console.log(post)
-            apiCall(post)
+            // console.log(newPost)
+            // apiCall()
+            // err.value=error.value
             // console.log(posts,error)
         }
-
+        
 
         return {
+            err,
             title,
             body,
             tag,

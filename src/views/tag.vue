@@ -1,7 +1,7 @@
 <template>
     <!-- {{tag}} -->
     <div class="home">
-        <div v-if="error">{{error}}</div>
+        <!-- <div v-if="error">{{error}}</div>
         <div v-if="posts.length">
             <div v-for="da in resumedData">
                 <div class="tag">
@@ -12,7 +12,7 @@
         </div>
         <div v-else>
             <Spinner/>
-        </div>
+        </div> -->
     </div>
 
 </template>
@@ -20,7 +20,7 @@
 <script>
 import { computed, ref } from '@vue/reactivity';
 import { useRoute } from 'vue-router';
-import getPosts from '../composable/getPosts';
+import {getPosts} from '../composable/postsHandler';
 
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
@@ -33,38 +33,38 @@ export default {
         const err=ref('')
         let tag = router.params.tag
 
-        const {data:posts,error }=  getPosts()
+        // const {data:posts,error }=  getPosts()
 
 
-        console.log("posts.value",posts.value)
-        const resumedData = computed(() => {
+        // console.log("posts.value",posts.value)
+        // const resumedData = computed(() => {
             
-            // let postdata =  
-            let output = []
-            output=posts.value.filter(eachVal => {
-                // console.log('eachVal',eachVal)
-                    let opt = eachVal.tags.includes(tag)
+        //     // let postdata =  
+        //     let output = []
+        //     output=posts.value.filter(eachVal => {
+        //         // console.log('eachVal',eachVal)
+        //             let opt = eachVal.tags.includes(tag)
 
-                    return opt;
-                })
+        //             return opt;
+        //         })
                 
         
-            console.log("output S", output)
-            return  output 
-        })
+        //     console.log("output S", output)
+        //     return  output 
+        // })
         
-        resumedData.value
-        if (error.value!='') {
-            console.log("error.value",error.value)
-            err.value = error.value
-        }
-        else if (!resumedData.value.length) {
-            console.log('resumedData.length',resumedData.value.length)
-            err.value = 'no Data Found'
-        }
-        console.log('resumedData', resumedData,resumedData.length)
-        console.log('err',err.value)
-        return { posts, resumedData, error }
+        // resumedData.value
+        // if (error.value!='') {
+        //     console.log("error.value",error.value)
+        //     err.value = error.value
+        // }
+        // else if (!resumedData.value.length) {
+        //     console.log('resumedData.length',resumedData.value.length)
+        //     err.value = 'no Data Found'
+        // }
+        // console.log('resumedData', resumedData,resumedData.length)
+        // console.log('err',err.value)
+        // return { posts, resumedData, error }
     }
 }
 </script>

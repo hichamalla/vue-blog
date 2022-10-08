@@ -9,15 +9,14 @@
 
 <script>
 
-    import {fetchDoc} from '../composable/api/firebase/firebase';
+    import {fetchDocumentData} from '../composable/postsHandler';
 export default {
     name: "DetailsPost",
     props: ['idx'], 
     setup(props) {
     
-        const {data:post,error,apiCall } = fetchDoc('posts',props.idx)
-        apiCall()
-        console.log("home",{post,error})
+      const {post,error} = fetchDocumentData(props.idx)
+        console.log("home",post,error)
         return { post,error };
     }
 }

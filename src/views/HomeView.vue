@@ -1,7 +1,8 @@
 <template>
     <div class="home">
         <div v-if="error">{{error}}</div>
-        <div v-if="posts.length">
+        <!-- <div v-if="isLoading">posts.length</div> -->
+        <div v-if="!isLoading">
             <ListPosts :posts="posts"></ListPosts>
             <tagList :posts="posts"></tagList>
         </div>
@@ -15,20 +16,33 @@
 
 
 
-import getPosts from '../composable/getPosts';
-
+import {getPosts} from '../composable/postsHandler';
+import {fetchDocuments,createNewDoc,fetchDoc,deleteDocuments} from '../composable/api/firebase/firebase';
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
 import tagList from '../components/tagList.vue';
+import { ref } from 'vue';
 
 export default {
     name: "Home",
     components: { ListPosts, Spinner,tagList },
     setup() {
-        
-        const {data:posts,error }=  getPosts()
-
-        return { posts,error };
+        const posts=ref([])
+        const error =ref()
+        const isLoading = ref(true)
+        let data=fetchDocuments('posts').then((res)=>  {
+         const{data,error } =   res
+         posts.value=data
+         console.log("postssss",data)
+        //  if (error)
+        //  throw Error("wtf")
+         {posts}
+    }).catch(err=>{console.log("error",err)
+    error.value=err
+})
+    .finally(()=>isLoading.value=false)
+        console.log("dataz",data)
+        return { posts,error ,isLoading};
     },
     mounted(){
         console.log("home")
