@@ -16,7 +16,7 @@
 import { ref } from 'vue';
 
 import { getPosts } from '../composable/postsHandler';
-
+import {createNewUser} from '../composable/api/firebase/auth'
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
 import tagList from '../components/tagList.vue';
@@ -48,7 +48,7 @@ export default {
         }
     },
     mounted() {
-        console.log("home")
+    //    createNewUser('')
     }
 }
 </script>
