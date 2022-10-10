@@ -9,56 +9,60 @@
         <div v-else>
             <Spinner></Spinner>
         </div>
-    </div>
+    </div> -
 </template>
 
 <script>
+import { ref } from 'vue';
 
+import { getPosts } from '../composable/postsHandler';
 
-
-import {getPosts} from '../composable/postsHandler';
-import {fetchDocuments,createNewDoc,fetchDoc,deleteDocuments} from '../composable/api/firebase/firebase';
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
 import tagList from '../components/tagList.vue';
-import { ref } from 'vue';
+
 
 export default {
     name: "Home",
-    components: { ListPosts, Spinner,tagList },
+    components: { ListPosts, Spinner, tagList },
     setup() {
-        const posts=ref([])
-        const error =ref()
+        const posts = ref()
+        const error = ref()
         const isLoading = ref(true)
-        let data=fetchDocuments('posts').then((res)=>  {
-         const{data,error } =   res
-         posts.value=data
-         console.log("postssss",data)
-        //  if (error)
-        //  throw Error("wtf")
-         {posts}
-    }).catch(err=>{console.log("error",err)
-    error.value=err
-})
-    .finally(()=>isLoading.value=false)
-        console.log("dataz",data)
-        return { posts,error ,isLoading};
+
+        getPosts()
+            .then(postsApi => {
+                console.log('da', postsApi)
+                posts.value = postsApi
+            }
+            ).catch(err => {
+                console.log('err', err)
+                error.value = err
+            }
+            ).finally(() => isLoading.value = false)
+        console.log('data', posts.value)
+        return {
+            posts,
+            error,
+            isLoading
+        }
     },
-    mounted(){
+    mounted() {
         console.log("home")
     }
 }
 </script>
 
 <style>
-    .home {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 10px;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 3fr 1fr;
-      gap: 20px;
-    }
-  </style>
+.home {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+}
+</style>

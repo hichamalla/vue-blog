@@ -1,33 +1,20 @@
-import {fetchDocuments,createNewDoc,fetchDoc,deleteDocuments} from './api/firebase/firebase';
+import {fetchDocuments,createNewDoc,fetchDoc,deleteDocuments,filterDocuments,editDoc} from './api/firebase/firebase';
 
 function getPosts () {
     
-    fetchDocuments('posts').then(res=>  {
-        //  const {data:posts,error }=   res
-         console.log("postssss",res)
-        //  if (error)
-        //  throw Error("wtf")
-         {posts}
-    }).catch(err=>console.log("error",err))
-    .finally(()=>console.log("finally"))
-    // apiCall()
-
-    // console.log("posts.length",posts.length)
-
-    return {}
+    return fetchDocuments("posts");
 }
-function createNewDocuments(data){
-    const { data: id, error } = createNewDoc(data,'posts')
-    // console.log(title.value,body.value,tags.value)
-    console.log(data,"data")
-    return {id,error}
-    // apiCall()
+function createNewPost(data){
+    return createNewDoc(data,'posts')
 }
-function fetchDocumentData(postId){
-    const {data:post,error,apiCall } = fetchDoc('posts',postId)
-    apiCall()
-    console.log("post","error",post,error)
-    return {post,error}
+function filterPostsByTag(query){
+    // console.log
+    return filterDocuments('posts','tags',query)
+}
+function fetchPostData(postId){
+   return fetchDoc('posts',postId)
+ 
+ 
 }
 function removeDocumentData(postId){
     const {apiCall } = deleteDocuments('posts',postId)
@@ -35,4 +22,7 @@ function removeDocumentData(postId){
     console.log("post","error",isDeleted,error)
     return {isDeleted,error}
 }
-export {getPosts,fetchDocumentData,createNewDocuments,removeDocumentData,}
+function updatePosts(id,docData){
+    return   editDoc('posts',id,docData)
+}
+export {getPosts,fetchPostData,createNewPost,removeDocumentData,filterPostsByTag,updatePosts}

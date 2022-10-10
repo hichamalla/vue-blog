@@ -2,53 +2,52 @@
 import { ref } from 'vue'
 // import {baseUrl} from '../config';
 import { db } from "../config";
-import { collection, Timestamp, addDoc, doc, getDocs, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-const data = ref([]);
-const error = ref(null)
+import { collection, serverTimestamp, addDoc, doc, getDocs, updateDoc, getDoc, deleteDoc, query, where } from "firebase/firestore";
+
 
 ///////////////////////////////////////////////////////////////
 // then use : fetch all the Documents from the database
 // inputs :     @collectioName the name of the collections
-//             
+//              
 //
 // outputs :    @data  list of objects of the documents
 //              @error in case of error this will be filled with the error message
 //              @apiCall to call for the function
 //////////////////////////////////////////////////////////////
 async function fetchDocuments(collectionName) {
-  
-    // const apiCall = async () => {
-        let data
-      
-        // let isLoading=true/
-        // try {
-            const docsRef = collection(db, collectionName);
-            const docSnap = await getDocs(docsRef);
 
-            let docs = [];
-            // console.log("docsSnap",docsSnap)
-            docSnap.forEach((doc) => {
-                docs.push({ ...doc.data(), id: doc.id })
-            });
 
-            if (docSnap.empty) {
-                throw Error('no Data')
-            }
-            else {
+    const docsRef = collection(db, collectionName);
+    const docSnap = await getDocs(docsRef);
+    let docs = [];
+    if (!docSnap.empty) {
 
-                data = docs
-            }
-        // } catch (err) {
-        //     error = "err :" + err.message
+        docSnap.forEach((doc) => {
+            docs.push({ ...doc.data(), id: doc.id })
+        });
+    }
 
-            console.log("docs",docs)
-        // }
-        return docs
-    // }
-    // console.log("apicall2", { data, error })
-   
+    return docs
+
 }
 
+async function filterDocuments(collectionName, document, elemnt) {
+    console.log("config", collectionName, document, elemnt)
+    const docRef = collection(db, collectionName);
+    let docsy = query(docRef, where("body", "==", "zdaz"));
+
+    const docSnap = await getDocs(docsy);
+
+    let docs = [];
+    if (!docSnap.empty) {
+
+        docSnap.forEach((doc) => {
+            docs.push({ ...doc.data(), id: doc.id })
+        });
+    }
+    console.log('docy', docs)
+    return docs;
+}
 ///////////////////////////////////////////////////////////////
 // then use : Create New Document
 // inputs :    @docData json file of the doc
@@ -63,34 +62,22 @@ async function fetchDocuments(collectionName) {
 
 async function createNewDoc(docData, collectionName) {
     const data = ref();
-    const error = ref(null)
 
-    try {
-        const docsRef = collection(db, collectionName);
-        let response = await addDoc(docsRef, docData);
+    const docsRef = collection(db, collectionName);
+    let response = await addDoc(docsRef, {...docData,createdAt: serverTimestamp(),UpdateddAt: serverTimestamp()});
+    return response.id
 
-
-
-
-        if (!response.id) {
-            throw Error('not added')
-        }
-        else {
-
-            data.value = response.id
-            console.log(data.value)
-        }
-    } catch (err) {
-        error.value = "err :" + err.message
-
-        console.log(error.value)
-    }
-    return { data, error }
 }
 // console.log("apicall2", { data, error })
 
 // }
+async function editDoc(collectionName, id, docData,) {
 
+    let docRef = doc(db, collectionName, id)
+    console.log('docRef',docRef)
+    updateDoc(docRef, {...docData,UpdateddAt: serverTimestamp()})
+
+}
 ///////////////////////////////////////////////////////////////
 // then use : fetch selected Document
 // inputs :    @id the id of the the doc
@@ -101,51 +88,47 @@ async function createNewDoc(docData, collectionName) {
 //              @apiCall to call for the function
 //////////////////////////////////////////////////////////////
 
-function fetchDoc(collectionName, id) {
-    const data = ref();
-    const error = ref(null)
-    // console.log('eeeee1')
-    const apiCall = async () => {
-        try {
-            const docRef = doc(db, collectionName, id);
 
-            const docSnap = await getDoc(docRef);
+const fetchDoc = async (collectionName, id) => {
 
-            console.log('eeeee2',)
-            let document
-            if (docSnap.exists()) {
+    const docRef = doc(db, collectionName, id);
 
-                // console.log('eeeee3')
-                // const docSnap = await getDoc(docRef);
-                // console.log('document2',docSnap)
-                document = { ...docSnap.data(), id: docSnap.id }
-                console.log('document', document)
+    const docSnap = await getDoc(docRef);
 
-                data.value = document
-            }
-            // if (!document) {
-            //     throw Error('no Data')
-            // }
-            else {
-                throw Error('no Data')
+    console.log('eeeee2',)
+    let document
+    if (docSnap.exists()) {
 
-            }
-        } catch (err) {
-            error.value = "err :" + err.message
+        // console.log('eeeee3')
+        // const docSnap = await getDoc(docRef);
+        // console.log('document2',docSnap)
+        console.log('document', document)
+        document = { ...docSnap.data(), id: docSnap.id }
 
-            // console.log(error.value)
-        }
+
+        return document
     }
-    console.log("apicall2", data.value, error.value)
-    return { data, error, apiCall }
+    // if (!document) {
+    //     throw Error('no Data')
+    // }
+    else {
+        throw Error('no Data')
+
+    }
+
+
+
 }
 
+
+
+
 function deleteDocuments(collectionName, id) {
-    
+
     const apiCall = async () => {
         const data = ref([]);
-    const error = ref(null)
-    
+        const error = ref(null)
+
         try {
             const docRef = doc(db, collectionName, id);
 
@@ -163,9 +146,9 @@ function deleteDocuments(collectionName, id) {
                 throw Error('element not found')
             }
             else {
-                let ex= await deleteDoc(docRef);
+                let ex = await deleteDoc(docRef);
                 document = true
-                console.log("dataex",data,ex)
+                console.log("dataex", data, ex)
                 // throw Error('no Data')
                 // data.value=true
             }
@@ -175,10 +158,10 @@ function deleteDocuments(collectionName, id) {
 
             console.log(error.value)
         }
-           console.log("apicall2", data, error.value)
-           return { data, error }
+        console.log("apicall2", data, error.value)
+        return { data, error }
     }
     console.log("apicall2ouTSIDE", data, error.value)
-    return {  apiCall }
+    return { apiCall }
 }
-export { fetchDoc, createNewDoc, fetchDocuments, deleteDocuments };
+export { fetchDoc, createNewDoc, fetchDocuments, deleteDocuments, filterDocuments, editDoc };

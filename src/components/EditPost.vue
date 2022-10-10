@@ -12,8 +12,8 @@
                 <textarea v-model="body" required></textarea>
                 <label> tags (hit entre to create)</label>
                 <input v-model="tag" @keydown.enter.prevent="addTag" type="text">
-                <div v-if="tags.length>0">
-                    <span v-for="tagElemen in tags" :key="tagElemen.id" class="pill"> #{{tagElemen}}</span>
+                <div v-if="tags">
+                    <span v-for="tagElemen in tags" :key="tagElemen.id" class="pill" @dblclick="tags=tags.filter(selTag=>selTag!=tagElemen)"> #{{tagElemen}}</span>
                 </div>
 
                 <div>
@@ -29,16 +29,18 @@
 
 <script>
 import { ref } from 'vue';
-import { createNewPost } from '../composable/postsHandler';
-import Spinner from '../components/spinner.vue';
+import { updatePosts } from '../composable/postsHandler';
+import Spinner from './spinner.vue';
 export default {
-    name: "createPost",
+    name: "EditPost",
+    props:['post'],
+    emits: ['updated'],
     components: { Spinner },
-    setup() {
-        const title = ref("")
-        const body = ref("")
+    setup(props,{ emit }) {
+        const title = ref(props.post.title)
+        const body = ref(props.post.body)
         const tag = ref("")
-        const tags = ref([])
+        const tags = ref(props.post.tags)
         const error = ref('')
         const isLoading = ref(false)
         const addTag = () => {
@@ -61,9 +63,10 @@ export default {
                 tags: tags.value,
 
             }
-            createNewPost(newPost).then(postsApi => {
+            updatePosts(props.post.id,newPost).then(postsApi => {
                 console.log('da', postsApi)
                 // posts.value = postsApi
+                emit('updated',{...newPost,id:props.post.id});
             }
             ).catch(err => {
                 console.log('err', err)
@@ -71,6 +74,7 @@ export default {
             }
             ).finally(() => {
                 isLoading.value = false
+
                 console.log("done")
             })
         }

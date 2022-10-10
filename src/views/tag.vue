@@ -20,7 +20,7 @@
 <script>
 import { computed, ref } from '@vue/reactivity';
 import { useRoute } from 'vue-router';
-import {getPosts} from '../composable/postsHandler';
+import {filterPostsByTag} from '../composable/postsHandler';
 
 import ListPosts from '../components/ListPosts.vue';
 import Spinner from '../components/spinner.vue';
@@ -34,7 +34,8 @@ export default {
         let tag = router.params.tag
 
         // const {data:posts,error }=  getPosts()
-
+        let x=filterPostsByTag(router.params.tag)
+        console.log('x',x)
 
         // console.log("posts.value",posts.value)
         // const resumedData = computed(() => {
