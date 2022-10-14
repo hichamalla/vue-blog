@@ -33,7 +33,7 @@ export default {
         getPosts()
             .then(postsApi => {
                 console.log('da', postsApi)
-                posts.value = postsApi
+                posts.value = postsApi.value
             }
             ).catch(err => {
                 console.log('err', err)

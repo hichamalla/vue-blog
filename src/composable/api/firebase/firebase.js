@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 // import {baseUrl} from '../config';
 import { db } from "../config";
-import { collection, serverTimestamp, addDoc, doc, getDocs, updateDoc, getDoc, deleteDoc, query, where } from "firebase/firestore";
+import { collection, serverTimestamp, addDoc, doc, getDocs, 
+    updateDoc, getDoc, deleteDoc, query, where,onSnapshot } from "firebase/firestore";
 
 
 ///////////////////////////////////////////////////////////////
@@ -16,16 +17,25 @@ import { collection, serverTimestamp, addDoc, doc, getDocs, updateDoc, getDoc, d
 //////////////////////////////////////////////////////////////
 async function fetchDocuments(collectionName) {
 
-
+    let docs = ref([]);
     const docsRef = collection(db, collectionName);
-    const docSnap = await getDocs(docsRef);
-    let docs = [];
-    if (!docSnap.empty) {
-
-        docSnap.forEach((doc) => {
-            docs.push({ ...doc.data(), id: doc.id })
+    onSnapshot(
+        docsRef, 
+        (listdocs) => {
+            listdocs.forEach((doc) => {
+                // console.log(doc.data())
+                        docs.value.push({ ...doc.data(), id: doc.id })
+                    });
         });
-    }
+    // await getDocs(docsRef);
+    
+    
+    // if (!docSnap.empty) {
+
+    //     listdocs.forEach((doc) => {
+    //         docs.push({ ...doc.data(), id: doc.id })
+    //     });
+    // }
 
     return docs
 
